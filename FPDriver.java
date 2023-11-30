@@ -6,28 +6,39 @@ public class FPDriver
 {
     public static void main(String[] args) throws Exception
     {
-        //Calling the NBA API for tea ms.
-        URL url = new URL("https://www.balldontlie.io/api/v1/teams");
-        Scanner JsonScan = new Scanner(url.openStream());
+        //Calling the NBA API for teams.
+        URL urlTeams = new URL("https://www.balldontlie.io/api/v1/teams");
+        Scanner JsonScan1 = new Scanner(urlTeams.openStream());
 
-        //Turning the raw data into a string
-        StringBuilder rawData = new StringBuilder();
-        while (JsonScan.hasNextLine())
+        //Calling NBA API for players.
+        URL urlPlayers = new URL("https://www.balldontlie.io/api/v1/players");
+        Scanner JsonScan2 = new Scanner(urlPlayers.openStream());
+
+
+        //Using the data from the Json scans and putting them into a String called rawData.
+        StringBuilder rawDataTeams = new StringBuilder();
+        StringBuilder rawDataPlayers = new StringBuilder();
+
+        while (JsonScan1.hasNextLine())
         {
-            rawData.append(JsonScan.nextLine());
+            rawDataTeams.append(JsonScan1.nextLine());
         }
-
-        //Printing for debugging
-        System.out.println(rawData.toString());
+        while (JsonScan2.hasNextLine())
+        {
+            rawDataPlayers.append(JsonScan2.nextLine());
+        }
 
         //Creating a gson object
         Gson gson = new Gson();
-        TeamsList teamsList = gson.fromJson(rawData.toString(), TeamsList.class);
+        TeamsList teamsList = gson.fromJson(rawDataTeams.toString(), TeamsList.class);
+        PlayersList playersList = gson.fromJson(rawDataPlayers.toString(), PlayersList.class);
 
         //Accessing team data from TeamsList object
         Team[] teams = teamsList.getData();
+        //Accessing player data from PlayerList object
+        Player[] players = playersList.getData();
 
-        //Print details of each team
+        //Print details for all teams
         if (teams != null)
         {
             for (Team team : teams)
@@ -35,5 +46,15 @@ public class FPDriver
                 System.out.println(team.toString());
             }
         }
+
+        //Print details for all players
+        if (players != null)
+        {
+            for(Player player : players)
+            {
+                System.out.println(player.toString());
+            }
+        }
+
     }
 }
