@@ -15,37 +15,15 @@ public class Teams
     /**
      * Default Constructor
      */
-    public Teams()
+    public Teams(Integer id, String abbreviation, String city, String conference, String division, String full_name)
     {
-
-    }
-
-    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
-    }
-
-    public void setCity(String city) {
         this.city = city;
-    }
-
-    public void setConference(String conference) {
         this.conference = conference;
-    }
-
-    public void setDivision(String division) {
         this.division = division;
-    }
-
-    public void setFull_name(String full_name) {
         this.full_name = full_name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Integer getId(){
@@ -71,9 +49,6 @@ public class Teams
         return full_name;
     }
 
-    public String getName() {
-        return name;
-    }
 
 
 
@@ -84,13 +59,14 @@ public class Teams
     @Override
     public String toString()
     {
-        return "Team" + full_name + "\n" +
+        String data = "Team" + full_name + "\n" +
                 "Team ID: " + id + "\n" +
                 "Abbreviation: " + abbreviation + "\n" +
                 "City: " + city + "\n" +
                 "Conference: " + conference + "\n" +
                 "Division: " + division + "\n" +
                 "Name: " + name + "\n";
+        return data;
     }
 
 }

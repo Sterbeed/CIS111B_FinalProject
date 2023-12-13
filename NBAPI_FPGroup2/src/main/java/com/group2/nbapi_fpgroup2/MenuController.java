@@ -1,70 +1,32 @@
 package com.group2.nbapi_fpgroup2;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Scanner;
+
 
 public class MenuController {
 
+    public TextArea textArea;
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    //Setting up the columns
-    @FXML
-    private TableView<Teams> tableView;
-    @FXML
-    private TableColumn<Teams, Integer> IDColumn;
-    @FXML
-    private TableColumn<Teams, String> TeamsColumn;
-    @FXML
-    private TableColumn<Teams, String> AbbreviationColumn;
-    @FXML
-    private TableColumn<Teams, String> CityColumn;
-    @FXML
-    private TableColumn<Teams, String> ConferenceColumn;
-    @FXML
-    private TableColumn<Teams, String> DivisionColumn;
-
-
-    private ObservableList<Teams> teamsList = FXCollections.observableArrayList();
-
-    public void initialize(URL url, ResourceBundle resourceBundle){
-
-
-        //Assign the items to the table view
-        tableView.setItems(teamsList);
-
-        //Defining what will be in each cell
-        IDColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
-        TeamsColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFull_name()));
-        AbbreviationColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAbbreviation()));
-        CityColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCity()));
-        ConferenceColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConference()));
-        DivisionColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDivision()));
-
-
-    }
-
-
 
     //In this method it specifies when the Teams button gets pressed switch to the teams menu
     public void switchToMenu(ActionEvent event) throws Exception {
-        root = FXMLLoader.load(getClass().getResource("MenuScene.fxml"));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MenuScene.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -73,10 +35,41 @@ public class MenuController {
 
     //In this method it specifies when the Menu button gets pressed switch to the teams menu
     public void switchToTeamsMenu(ActionEvent event) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("TeamScene.fxml"));
+
+
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("TeamScene.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+        displayTeamsData();
+    }
+
+    @FXML
+    public void displayTeamsData() throws Exception {
+        //Calling the NBA API for teams.
+        URL urlTeams = new URL("https://www.balldontlie.io/api/v1/teams");
+        Scanner JsonScan1 = new Scanner(urlTeams.openStream());
+
+        //Using the data from the Json scans and putting them into a String called rawData.
+        StringBuilder rawDataTeams = new StringBuilder();
+
+        while (JsonScan1.hasNextLine()) {
+            rawDataTeams.append(JsonScan1.nextLine());
+        }
+
+        //Creating a gson object
+        Gson gson = new Gson();
+        TeamsList teamsList = gson.fromJson(rawDataTeams.toString(), TeamsList.class);
+
+        //Accessing team data from TeamsList object
+        Teams[] teams = teamsList.getData();
+
+        textArea.setText(Arrays.toString(teams));
     }
 }
+
+
+
+
