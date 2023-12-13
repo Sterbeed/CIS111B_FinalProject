@@ -20,8 +20,6 @@ public class FPDriver extends Application {
         stage.show();
     }
 
-
-
     public static void main(String[] args) throws IOException {
         //Calling the NBA API for teams.
         URL urlTeams = new URL("https://www.balldontlie.io/api/v1/teams");
@@ -51,7 +49,7 @@ public class FPDriver extends Application {
             }
         }
 
-
+        //Launch the program
         launch();
     }
 
